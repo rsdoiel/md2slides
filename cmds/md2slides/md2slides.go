@@ -71,6 +71,7 @@ func makeSlide(tmpl *template.Template, slide *Slide) {
 
 func nextPrev(i, last int, fname string) string {
 	var p []string
+	p = append(p, fmt.Sprintf(`<a href="00-%s">home</a>`, fname))
 	if i > 0 {
 		// Include Previous
 		p = append(p,
