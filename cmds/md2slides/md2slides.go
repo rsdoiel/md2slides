@@ -14,15 +14,18 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-const version = "0.0.0"
+const version = "0.0.1"
 
 type Slide struct {
-	SlideNo int
+	CurNo   int
+	FirstNo int
 	LastNo  int
-	Fname   string
+	FName   string
 	Title   string
 	Content string
+	//FIXME: Depreciate Nav and construct it via the template and struct
 	Nav     string
+	CSSPath string
 }
 
 var (
@@ -33,7 +36,7 @@ var (
 <html>
 <head>
    <title>{{ .Title }}</title>
-   <link href="css/style.css" rel="stylesheet" />
+   <link href="{{ .CSSPath }}" rel="stylesheet" />
 </head>
 <body>
 	<section>
@@ -45,6 +48,7 @@ var (
 </body>
 </html>
 `
+	CSSPath = "css/style.css"
 )
 
 func init() {
@@ -54,7 +58,7 @@ func init() {
 }
 
 func makeSlide(tmpl *template.Template, slide *Slide) {
-	sname := fmt.Sprintf(`%02d-%s.html`, slide.SlideNo, slide.Fname)
+	sname := fmt.Sprintf(`%02d-%s.html`, slide.CurNo, slide.FName)
 	fp, err := os.Create(sname)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s %s\n", sname, err)
@@ -138,12 +142,15 @@ func main() {
 	for i, s := range slides {
 		data := blackfriday.MarkdownCommon(s)
 		makeSlide(tmpl, &Slide{
-			Fname:   fname,
-			SlideNo: i,
+			FName:   fname,
+			CurNo:   i,
+			FirstNo: 0,
 			LastNo:  lastSlide,
 			Title:   presentationTitle,
 			Content: string(data),
+			// FIXME: This should be implemented in the template itself
 			Nav:     nextPrev(i, lastSlide, fname),
+			CSSPath: CSSPath,
 		})
 	}
 }
