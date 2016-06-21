@@ -1,3 +1,33 @@
+//
+// md2slides.go - A simple command line utility that uses Markdown
+// to generate a sequence of HTML5 pages that can be used for presentations.
+//
+// @author R. S. Doiel, <rsdoiel@gmail.com>
+//
+// Copyright (c) 2016, R. S. Doiel
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// * Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//
+// * Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 package main
 
 import (
@@ -14,47 +44,89 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-const version = "0.0.1"
+const (
+	version = "0.0.1"
+	license = `
+%s
+
+Copyright (c) 2016, R. S. Doiel
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+`
+)
 
 type Slide struct {
 	CurNo   int
+	PrevNo  int
+	NextNo  int
 	FirstNo int
 	LastNo  int
 	FName   string
 	Title   string
 	Content string
-	//FIXME: Depreciate Nav and construct it via the template and struct
-	Nav     string
 	CSSPath string
 }
 
 var (
 	showHelp          bool
 	showVersion       bool
+	showLicense       bool
 	presentationTitle string
 	defaultHTML       = `<!DOCTYPE html>
 <html>
 <head>
-   <title>{{ .Title }}</title>
+   {{ if .Title -}}<title>{{ .Title }}</title>{{- end}}
+   {{ if .CSSPath -}}
    <link href="{{ .CSSPath }}" rel="stylesheet" />
+   {{- end }}
 </head>
 <body>
-	<section>
-{{ .Content }}
-	</section>
+	<section>{{ .Content }}</section>
 	<nav>
-{{ .Nav }}
+<a href="{{printf "%02d-%s.html" .FirstNo .FName}}">Home</a>
+{{ if gt .CurNo .FirstNo -}} 
+<a href="{{printf "%02d-%s.html" .PrevNo .FName}}">Prev</a>
+{{- end}}
+{{ if lt .CurNo .LastNo -}} 
+<a href="{{printf "%02d-%s.html" .NextNo .FName}}">Next</a>
+{{- end}}
 	</nav>
 </body>
 </html>
 `
-	CSSPath = "css/style.css"
+	CSSPath       string
+	templateFName string
 )
 
 func init() {
 	flag.BoolVar(&showHelp, "h", false, "display help")
 	flag.BoolVar(&showVersion, "v", false, "display version")
-	flag.StringVar(&presentationTitle, "t", "", "Presentation title")
+	flag.BoolVar(&showLicense, "l", false, "display license")
+	flag.StringVar(&presentationTitle, "title", "", "Presentation title")
+	flag.StringVar(&CSSPath, "css", CSSPath, "Specify the CSS file to use")
+	flag.StringVar(&templateFName, "template",
+		templateFName, "Specify an HTML template to use")
 }
 
 func makeSlide(tmpl *template.Template, slide *Slide) {
@@ -71,22 +143,6 @@ func makeSlide(tmpl *template.Template, slide *Slide) {
 		os.Exit(1)
 	}
 	fmt.Printf("Wrote %s\n", sname)
-}
-
-func nextPrev(i, last int, fname string) string {
-	var p []string
-	p = append(p, fmt.Sprintf(`<a href="00-%s.html">home</a>`, fname))
-	if i > 0 {
-		// Include Previous
-		p = append(p,
-			fmt.Sprintf(`<a href="%02d-%s.html">prev</a>`, (i-1), fname))
-	}
-	if i < last {
-		// Include Next
-		p = append(p,
-			fmt.Sprintf(`<a href="%02d-%s.html">next</a>`, (i+1), fname))
-	}
-	return strings.Join(p, "&nbsp;")
 }
 
 func main() {
@@ -110,8 +166,21 @@ func main() {
 		os.Exit(0)
 	}
 	if showVersion == true {
-		fmt.Printf("\n\n Version %s\n", version)
+		fmt.Printf("\n Version %s\n", version)
 		os.Exit(0)
+	}
+	if showLicense == true {
+		fmt.Printf(license, appname)
+		os.Exit(0)
+	}
+
+	if templateFName != "" {
+		src, err := ioutil.ReadFile(templateFName)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%s %s\n", templateFName, err)
+			os.Exit(1)
+		}
+		defaultHTML = string(src)
 	}
 
 	var fname string
@@ -128,13 +197,13 @@ func main() {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)
 	}
+
 	fname = strings.TrimSuffix(path.Base(fname), path.Ext(fname))
 	tmpl, err := template.New("slide").Parse(defaultHTML)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)
 	}
-
 	slides := bytes.Split(src, []byte("--\n"))
 
 	fmt.Printf("Slide count: %d\n", len(slides))
@@ -144,12 +213,12 @@ func main() {
 		makeSlide(tmpl, &Slide{
 			FName:   fname,
 			CurNo:   i,
+			PrevNo:  (i - 1),
+			NextNo:  (i + 1),
 			FirstNo: 0,
 			LastNo:  lastSlide,
 			Title:   presentationTitle,
 			Content: string(data),
-			// FIXME: This should be implemented in the template itself
-			Nav:     nextPrev(i, lastSlide, fname),
 			CSSPath: CSSPath,
 		})
 	}
