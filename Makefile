@@ -4,10 +4,10 @@
 #
 
 build:
-	go build -v -o bin/md2slides cmds/md2slides/md2slides.go
+	go build -o bin/md2slides cmds/md2slides/md2slides.go
 
 install:
-	env GOBIN=$(HOME)/bin go install -v cmds/md2slides/md2slides.go
+	env GOBIN=$(HOME)/bin go install cmds/md2slides/md2slides.go
 
 clean:
 	if [ -d bin ]; then rm -fR bin; fi
