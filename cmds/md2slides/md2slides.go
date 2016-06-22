@@ -45,7 +45,7 @@ import (
 )
 
 const (
-	version = "0.0.1"
+	version = "0.0.1-pre"
 	license = `
 %s
 
@@ -204,10 +204,12 @@ func main() {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)
 	}
-	slides := bytes.Split(src, []byte("\n--\n"))
-	if len(slides) == 1 {
-		slides = bytes.Split(src, []byte("\r\n--\r\n"))
+
+	// Note: handle legacy CR/LF endings as well as normal LF line endings
+	if bytes.Contains(src, []byte("\r\n")) {
+		src = bytes.Replace(src, []byte("\r\n"), []byte("\n"), -1)
 	}
+	slides := bytes.Split(src, []byte("\n--\n"))
 
 	fmt.Printf("Slide count: %d\n", len(slides))
 	lastSlide := len(slides) - 1
