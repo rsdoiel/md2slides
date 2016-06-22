@@ -76,6 +76,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 `
 )
 
+// This is the metadata about a slide to be generated.
 type Slide struct {
 	CurNo   int
 	PrevNo  int
@@ -115,7 +116,7 @@ var (
 </body>
 </html>
 `
-	CSSPath       string
+	cssPath       string
 	templateFName string
 )
 
@@ -124,7 +125,7 @@ func init() {
 	flag.BoolVar(&showVersion, "v", false, "display version")
 	flag.BoolVar(&showLicense, "l", false, "display license")
 	flag.StringVar(&presentationTitle, "title", "", "Presentation title")
-	flag.StringVar(&CSSPath, "css", CSSPath, "Specify the CSS file to use")
+	flag.StringVar(&cssPath, "css", cssPath, "Specify the CSS file to use")
 	flag.StringVar(&templateFName, "template",
 		templateFName, "Specify an HTML template to use")
 }
@@ -186,7 +187,8 @@ func main() {
 	var fname string
 	args := flag.Args()
 	if len(args) > 0 {
-		fname, args = args[0], args[1:]
+		//fname, args = args[0], args[1:]
+		fname = args[0]
 	}
 	if fname == "" {
 		fmt.Fprintf(os.Stderr, "Missing filename")
@@ -224,7 +226,7 @@ func main() {
 			LastNo:  lastSlide,
 			Title:   presentationTitle,
 			Content: string(data),
-			CSSPath: CSSPath,
+			CSSPath: cssPath,
 		})
 	}
 }
