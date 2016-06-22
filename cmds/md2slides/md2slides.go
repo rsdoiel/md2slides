@@ -209,7 +209,7 @@ func main() {
 	if bytes.Contains(src, []byte("\r\n")) {
 		src = bytes.Replace(src, []byte("\r\n"), []byte("\n"), -1)
 	}
-	slides := bytes.Split(src, []byte("\n--\n"))
+	slides := bytes.Split(src, []byte("--\n"))
 
 	fmt.Printf("Slide count: %d\n", len(slides))
 	lastSlide := len(slides) - 1
