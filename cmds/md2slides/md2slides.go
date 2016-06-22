@@ -76,7 +76,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 `
 )
 
-// This is the metadata about a slide to be generated.
+// Slide is the metadata about a slide to be generated.
 type Slide struct {
 	CurNo   int
 	PrevNo  int
