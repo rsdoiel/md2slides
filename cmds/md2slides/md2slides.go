@@ -103,14 +103,28 @@ var (
    {{else}}
    <style>
 body {
-	    font-size: 24px;
-		    font-family: sans;
-			    margin: 10%;
+	width: 100%;
+	height: 100%;
+	margin: 10%;
+	padding: 0;
+	font-size: 24px;
+	font-family: sans-serif;
 }
 
 ul {
-	    list-style: circle;
-		    text-indent: 0.25em;
+	list-style: circle;
+	text-indent: 0.25em;
+}
+
+nav {
+	position: absolute;
+   	bottom: 1em; 
+	margin:0;
+	padding:0.24em;
+	width: 100%;
+	height: 4em;
+	text-align: left;
+	font-size: 60%;
 }
    </style>
    {{- end }}
