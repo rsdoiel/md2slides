@@ -4,11 +4,14 @@
 #
 
 build:
-	mkdir -p bin
 	go build -v -o bin/md2slides cmds/md2slides/md2slides.go
 
 install:
 	env GOBIN=$(HOME)/bin go install -v cmds/md2slides/md2slides.go
+
+clean:
+	if [ -d bin ]; then rm -fR bin; fi
+	if [ -d dist ]; then rm -fR dist; fi
 
 release:
 	./mk-release.sh	

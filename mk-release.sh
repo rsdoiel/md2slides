@@ -2,8 +2,10 @@
 #
 # Make releases for Linux/amd64, Linux/ARM7 (Raspberry Pi), Windows, and Mac OX X (darwin)
 #
-env GOOS=linux GOARCH=amd64 go build -o dist/linux_amd64/md2slides cmds/md2slides/md2slides.go
-env GOOS=linux GOARCH=arm GOARM=7 go build -o dist/raspberrypi/md2slides cmds/md2slides/md2slides.go
-env GOOS=windows GOARCH=amd64 go build -o dist/windows/md2slides.exe cmds/md2slides/md2slides.go
-env GOOS=darwin	GOARCH=amd64 go build -o dist/maxosx/md2slides cmds/md2slides/md2slides.go
+PROGNAME=md2slides
+
+env GOOS=linux GOARCH=amd64 go build -o dist/linux_amd64/$PROGNAME cmds/$PROGNAME/$PROGNAME.go
+env GOOS=linux GOARCH=arm GOARM=7 go build -o dist/raspberrypi/$PROGNAME cmds/$PROGNAME/$PROGNAME.go
+env GOOS=windows GOARCH=amd64 go build -o dist/windows/$PROGNAME.exe cmds/$PROGNAME/$PROGNAME.go
+env GOOS=darwin	GOARCH=amd64 go build -o dist/maxosx/$PROGNAME cmds/$PROGNAME/$PROGNAME.go
 
