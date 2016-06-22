@@ -45,7 +45,7 @@ import (
 )
 
 const (
-	version = "0.0.1-pre"
+	version = "0.0.1"
 	license = `
 %s
 
@@ -97,15 +97,30 @@ var (
 	defaultHTML       = `<!DOCTYPE html>
 <html>
 <head>
-   {{ if .Title -}}<title>{{ .Title }}</title>{{- end}}
-   {{ if .CSSPath -}}
+   {{- if .Title -}}<title>{{ .Title }}</title>{{- end}}
+   {{- if .CSSPath -}}
    <link href="{{ .CSSPath }}" rel="stylesheet" />
+   {{else}}
+   <style>
+body {
+	    font-size: 24px;
+		    font-family: sans;
+			    margin: 10%;
+}
+
+ul {
+	    list-style: circle;
+		    text-indent: 0.25em;
+}
+   </style>
    {{- end }}
 </head>
 <body>
 	<section>{{ .Content }}</section>
 	<nav>
+{{ if ne .CurNo .FirstNo -}}
 <a href="{{printf "%02d-%s.html" .FirstNo .FName}}">Home</a>
+{{- end}}
 {{ if gt .CurNo .FirstNo -}} 
 <a href="{{printf "%02d-%s.html" .PrevNo .FName}}">Prev</a>
 {{- end}}
