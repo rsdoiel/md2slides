@@ -134,6 +134,8 @@ func main() {
 		templateSource = string(src)
 	}
 
+	//FIXME: If it is markdown file then assign fname that value, otherwise it's a template add it to the
+	// list of templates to compile.
 	var fname string
 	args := flag.Args()
 	if len(args) > 0 {
