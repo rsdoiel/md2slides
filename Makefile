@@ -18,8 +18,9 @@ save:
 	git push origin master
 
 clean:
-	if [ -d bin ]; then rm -fR bin; fi
-	if [ -d dist ]; then rm -fR dist; fi
+	if [ -d bin ]; then /bin/rm -fR bin; fi
+	if [ -d dist ]; then /bin/rm -fR dist; fi
+	if [ -f md2slides-binary-release.zip ]; then /bin/rm md2slides-binary-release.zip; fi
 
 release:
 	./mk-release.bash	
