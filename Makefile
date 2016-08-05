@@ -24,4 +24,5 @@ clean:
 release:
 	./mk-release.bash	
 	
-
+publish:
+	./publish.bash
