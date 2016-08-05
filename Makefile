@@ -12,6 +12,9 @@ test:
 install:
 	env GOBIN=$(HOME)/bin go install cmds/md2slides/md2slides.go
 
+status:
+	git status
+
 save:
 	./mk-website.bash
 	git commit -am "quick save"
