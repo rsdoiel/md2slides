@@ -25,7 +25,9 @@ _testmain.go
 
 # Project ignores
 bin/*
+dist/*
 etc/*
 *.swp
 *~
 \#*\#
+*.zip
