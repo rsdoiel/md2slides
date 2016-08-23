@@ -39,5 +39,5 @@ MakePage nav.md README.md index.html
 echo "Generating install.html"
 MakePage nav.md INSTALL.md install.html
 echo "Generating license.html"
-MakePage nav.md "text:$(cat LICENSE)" license.html
+MakePage nav.md "markdown:$(cat LICENSE)" license.html
 
