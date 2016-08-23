@@ -24,20 +24,20 @@ function MakePage () {
         APP="./bin/mkpage"
     fi
 
-    echo "Rendering $html from $content and $nav"
-    $APP -m \
-	"title=string:md2slides: A Markdown file to presentation slide converter" \
+    echo "Rendering $html"
+    $APP \
+	"title=text:md2slides: A Markdown file to presentation slide converter" \
         "nav=$nav" \
         "content=$content" \
-	    "sitebuilt=string:Updated $(date)" \
-        "copyright=copyright.md" \
         page.tmpl > $html
 }
 
 echo "Checking necessary software is installed"
 softwareCheck mkpage
-echo "Generating website index.html with mkpage"
+echo "Generating website index.html"
 MakePage nav.md README.md index.html
-echo "Generating install.html with mkpage"
+echo "Generating install.html"
 MakePage nav.md INSTALL.md install.html
+echo "Generating license.html"
+MakePage nav.md "text:$(cat LICENSE)" license.html
 

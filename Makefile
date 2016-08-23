@@ -20,6 +20,9 @@ save:
 	git commit -am "quick save"
 	git push origin master
 
+website:
+	./mk-website.bash
+
 clean:
 	if [ -d bin ]; then /bin/rm -fR bin; fi
 	if [ -d dist ]; then /bin/rm -fR dist; fi
