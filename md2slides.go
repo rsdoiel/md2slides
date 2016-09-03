@@ -234,11 +234,7 @@ func MakeSlideString(tmpl *template.Template, slide *Slide) (string, error) {
 func SlidesToTOCSlide(slides []*Slide) (*Slide, error) {
 	var buf bytes.Buffer
 	src := `
-{{with .Title}}
-	<h1>{{ . }}</h1>
-	<h2>Table of contents</h2>
-{{end}}
-
+<h1>Table of contents</h1>
 <ul>
 {{range $slide := . -}}
 	<li><a href="{{- printf "%02d-%s.html" $slide.CurNo $slide.FName -}}">{{- printf "%d &mdash; %s" $slide.CurNo $slide.Heading -}}</a></li>
