@@ -32,6 +32,7 @@ package md2slides
 
 import (
 	"bytes"
+	"encoding/xml"
 	"fmt"
 	"io"
 	"os"
@@ -43,20 +44,23 @@ import (
 
 const (
 	// Version of md2slides package
-	Version = "v0.0.2"
+	Version = "v0.0.3"
 )
 
 // Slide is the metadata about a slide to be generated.
 type Slide struct {
-	CurNo   int
-	PrevNo  int
-	NextNo  int
-	FirstNo int
-	LastNo  int
-	FName   string
-	Title   string
-	Content string
-	CSSPath string
+	XMLName xml.Name `json:"-"`
+	CurNo   int      `xml:"CurNo" json:"CurNo"`
+	PrevNo  int      `xml:"PrevNo" json:"PrevNo"`
+	NextNo  int      `xml:"NextNo" json:"NextNo"`
+	FirstNo int      `xml:"FirstNo" json:"FirstNo"`
+	LastNo  int      `xml:"LastNo" json:"LastNo"`
+	FName   string   `xml:"FName" json:"FName"`
+	Title   string   `xml:"Title" json:"Title"`
+	Heading string   `xml:"Heading" json:"Heading"`
+	Content string   `xml:"Content" json:"Content"`
+	CSSPath string   `xml:"CSSPath,omitempty" json:"CSSPath,omitempty"`
+	JSPath  string   `xml:"JSPath,omitempty" json:"JSPath,omitempty"`
 }
 
 var (
@@ -64,56 +68,57 @@ var (
 	DefaultTemplateSource = `<!DOCTYPE html>
 <html>
 <head>
-	{{if .Title -}}<title>{{- .Title -}}</title>{{- end}}
-	{{if .CSSPath -}}
+    {{if .Title -}}<title>{{- .Title -}}</title>{{- end}}
+    {{if .CSSPath -}}
 <link href="{{ .CSSPath }}" rel="stylesheet" />
    {{else -}}
 <style>
     body {
-    	width: 100%;
-    	height: 100%;
-    	margin: 10%;
-    	padding: 0;
-    	font-size: 24px;
-    	font-family: sans-serif;
+        width: 100%;
+        height: 100%;
+        margin: 10%;
+        padding: 0;
+        font-size: calc(2em+1vw);
+        font-family: sans-serif;
     }
     
     ul {
-    	list-style: circle;
-    	text-indent: 0.25em;
+        list-style: disc;
+        text-indent: 0.25em;
     }
     
     nav {
-    	position: absolute;
-    	top: 0em; 
-    	margin:0;
-    	padding:0.24em;
-    	width: 100%;
-    	height: 4em;
-    	text-align: left;
-    	font-size: 60%;
+        position: absolute;
+        top: 0em; 
+        margin:0;
+        padding:0.24em;
+        width: 100%;
+        height: 4em;
+        text-align: left;
+        font-size: 60%;
     }
     
     section {
-    	width: 100%;
-    	height: auto;
+        width: 100%;
+        height: auto;
     }
 </style>
 {{- end }}
 </head>
 <body>
-	<nav>
+    <nav>
 {{ if ne .CurNo .FirstNo -}}
-<a href="{{printf "%02d-%s.html" .FirstNo .FName}}">Home</a>
+<a id="start-slide" href="{{printf "%02d-%s.html" .FirstNo .FName}}">Home</a>
 {{- end}}
 {{ if gt .CurNo .FirstNo -}} 
-<a href="{{printf "%02d-%s.html" .PrevNo .FName}}">Prev</a>
+<a id="prev-slide" href="{{printf "%02d-%s.html" .PrevNo .FName}}">Prev</a>
 {{- end}}
 {{ if lt .CurNo .LastNo -}} 
-<a href="{{printf "%02d-%s.html" .NextNo .FName}}">Next</a>
+<a id="next-slide" href="{{printf "%02d-%s.html" .NextNo .FName}}">Next</a>
 {{- end}}
-	</nav>
-	<section>{{ .Content }}</section>
+    </nav>
+    <section>{{ .Content }}</section>
+{{with .JSPath}}<script src="{{.}}"></script>{{end}}
 <script>
 (function (document, window) {
     'use strict';
@@ -127,16 +132,22 @@ var (
             /* case 32: */
             case 37:
             // Previous: left arrow
-                prev.click();
+                if (prev) {
+                    prev.click();
+                }
                 break;
             case 39:
                 // Next: right arrow
-                next.click();
+                if (next) {
+                    next.click();
+                }
                 break;
             case 72:
             case 83:
                 // Home/Start: h, s
-                start.click();
+                if (start) {
+                    start.click();
+                }
                 break;
         }
     };
@@ -148,19 +159,31 @@ var (
 )
 
 // MarkdownToSlides turns a markdown file into one or more Slide using the fname, title and cssPath provided
-func MarkdownToSlides(fname string, title string, cssPath string, src []byte) []*Slide {
+func MarkdownToSlides(fname string, title string, cssPath string, jsPath string, src []byte) []*Slide {
 	var slides []*Slide
 
 	// Note: handle legacy CR/LF endings as well as normal LF line endings
 	if bytes.Contains(src, []byte("\r\n")) {
 		src = bytes.Replace(src, []byte("\r\n"), []byte("\n"), -1)
 	}
-	// Note: We're only spliting on line that contain "--", not lines ending with where text might end with "--"
+
+	// Note: We're only spliting on line that contains only "--",
 	mdSlides := bytes.Split(src, []byte("\n--\n"))
 
 	lastSlide := len(mdSlides) - 1
 	for i, s := range mdSlides {
+		//Note: Collect first heading for TOC slide
+		heading := []byte("")
+		hIndex := bytes.Index(s, []byte("# "))
+		if hIndex > -1 {
+			hEOL := bytes.Index(s[hIndex:], []byte("\n"))
+			if hEOL > -1 {
+				heading = s[hIndex : hIndex+hEOL]
+			}
+		}
+		// Note: Convert slide's Markdown to HTML
 		data := blackfriday.MarkdownCommon(s)
+		// Assemble Slide
 		slides = append(slides, &Slide{
 			FName:   fname,
 			CurNo:   i,
@@ -169,8 +192,10 @@ func MarkdownToSlides(fname string, title string, cssPath string, src []byte) []
 			FirstNo: 0,
 			LastNo:  lastSlide,
 			Title:   title,
+			Heading: string(bytes.TrimPrefix(heading, []byte("# "))),
 			Content: string(data),
 			CSSPath: cssPath,
+			JSPath:  jsPath,
 		})
 	}
 	return slides
@@ -202,4 +227,48 @@ func MakeSlideString(tmpl *template.Template, slide *Slide) (string, error) {
 	wr := io.Writer(&buf)
 	err := MakeSlide(wr, tmpl, slide)
 	return buf.String(), err
+}
+
+// SlidesToTOCSlide takes an array of slide generating a new Slide structure
+// whos content is a table of contents of other slides and their first headings.
+func SlidesToTOCSlide(slides []*Slide) (*Slide, error) {
+	var buf bytes.Buffer
+	src := `
+<ul>
+{{range $slide := . -}}
+	<li><a href="{{- printf "%02d-%s.html" $slide.CurNo $slide.FName -}}">{{- printf "%d &mdash; %s" $slide.CurNo $slide.Heading -}}</a></li>
+{{- end}}
+</ul>
+`
+	tmpl, err := template.New("slide").Parse(src)
+	if err != nil {
+		return nil, err
+	}
+	wr := io.Writer(&buf)
+	err = tmpl.Execute(wr, slides)
+	if err != nil {
+		return nil, err
+	}
+
+	tocSlide := new(Slide)
+	tocSlide.FName = slides[0].FName
+	tocSlide.Title = slides[0].Title
+	tocSlide.Content = buf.String()
+
+	return tocSlide, nil
+}
+
+// MakeTOCSlideFile this takes a template and slide and renders the results to a file.
+func MakeTOCSlideFile(tmpl *template.Template, slide *Slide) error {
+	sname := fmt.Sprintf(`toc-%s.html`, slide.FName)
+	fp, err := os.Create(sname)
+	if err != nil {
+		return fmt.Errorf("%s\n", sname, err)
+	}
+	defer fp.Close()
+	err = MakeSlide(fp, tmpl, slide)
+	if err != nil {
+		return fmt.Errorf("%s", sname, err)
+	}
+	return nil
 }
