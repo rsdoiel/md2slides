@@ -15,7 +15,7 @@ It places all the resulting executable programs in the *dist* folders.
 
 ## windows issues
 
-*md2slides* has very limited Windows testing done.  *md2slides.exe* 
+*md2slides* has had very limited Windows testing.  *md2slides.exe* 
 presumes the Unix style new line only and not the old DOS/Windows CR/LF type endings.
 
 
