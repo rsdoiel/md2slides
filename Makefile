@@ -16,7 +16,6 @@ status:
 	git status
 
 save:
-	./mk-website.bash
 	git commit -am "quick save"
 	git push origin master
 
