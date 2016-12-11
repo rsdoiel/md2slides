@@ -2,8 +2,11 @@
 #
 # Make releases for Linux/amd64, Linux/ARM6 and Linux/ARM7 (Raspberry Pi), Windows, and Mac OX X (darwin)
 #
-RELEASE_NAME=md2slides
-for PROGNAME in md2slides; do
+RELEASE_NAME=mkslides
+
+PROG_LIST=mkslides
+
+for PROGNAME in $(PROG_LIST); do
   env GOOS=linux GOARCH=amd64 go build -o dist/linux-amd64/$PROGNAME cmds/$PROGNAME/$PROGNAME.go
   env GOOS=darwin GOARCH=amd64 go build -o dist/macosx-amd64/$PROGNAME cmds/$PROGNAME/$PROGNAME.go
   env GOOS=linux GOARCH=arm GOARM=6 go build -o dist/raspberrypi-arm6/$PROGNAME cmds/$PROGNAME/$PROGNAME.go
@@ -11,4 +14,4 @@ for PROGNAME in md2slides; do
   env GOOS=windows GOARCH=amd64 go build -o dist/windows-amd64/$PROGNAME.exe cmds/$PROGNAME/$PROGNAME.go
 done
 
-zip -r "$RELEASE_NAME-binary-release.zip" README.md INSTALL.md LICENSE dist/*
+zip -r "$RELEASE_NAME-release.zip" README.md INSTALL.md LICENSE dist/*

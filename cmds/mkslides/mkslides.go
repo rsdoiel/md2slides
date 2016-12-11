@@ -1,5 +1,5 @@
 //
-// md2slides.go - A simple command line utility that uses Markdown
+// mkslides.go - A simple command line utility that uses Markdown
 // to generate a sequence of HTML5 pages that can be used for presentations.
 //
 // @author R. S. Doiel, <rsdoiel@gmail.com>
@@ -42,11 +42,11 @@ import (
 	// 3rd Part packages
 
 	// My packages
-	"github.com/rsdoiel/md2slides"
+	"github.com/rsdoiel/mkslides"
 )
 
 const (
-	version = md2slides.Version
+	version = mkslides.Version
 	license = `
 %s
 
@@ -85,7 +85,7 @@ var (
 	cssPath           string
 	jsPath            string
 	templateFName     string
-	templateSource    = md2slides.DefaultTemplateSource
+	templateSource    = mkslides.DefaultTemplateSource
 )
 
 func init() {
@@ -172,10 +172,10 @@ func main() {
 	}
 
 	// Build the slides
-	slides := md2slides.MarkdownToSlides(fname, presentationTitle, cssPath, jsPath, src)
+	slides := mkslides.MarkdownToSlides(fname, presentationTitle, cssPath, jsPath, src)
 	// Render the slides
 	for i, slide := range slides {
-		err := md2slides.MakeSlideFile(tmpl, slide)
+		err := mkslides.MakeSlideFile(tmpl, slide)
 		if err == nil {
 			// Note: Give some feed back when slide written successful
 			fmt.Fprintf(os.Stdout, "Wrote %02d-%s.html\n", slide.CurNo, slide.FName)
@@ -185,12 +185,12 @@ func main() {
 		}
 	}
 	// Render the TOC slide
-	slide, err := md2slides.SlidesToTOCSlide(slides)
+	slide, err := mkslides.SlidesToTOCSlide(slides)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Can't create a table of contents slide", err)
 		os.Exit(1)
 	}
-	err = md2slides.MakeTOCSlideFile(tmpl, slide)
+	err = mkslides.MakeTOCSlideFile(tmpl, slide)
 	if err == nil {
 		// Note: Give some feed back when slide written successful
 		fmt.Fprintf(os.Stdout, "Wrote toc-%s.html\n", slide.FName)

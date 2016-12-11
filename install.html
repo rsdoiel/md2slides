@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>md2slides: A Markdown file to presentation slide converter</title>
+    <title>mkslides: A Markdown file to presentation slide converter</title>
     <link href='https://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic' rel='stylesheet' type='text/css'>
     <link href="css/site.css" rel="stylesheet" />
 <head>
 <body>
     <header>
-        <h1>md2slides: A Markdown file to presentation slide converter</h1>
+        <h1>mkslides: A Markdown file to presentation slide converter</h1>
     </header>
     <section><h1>Installation</h1>
 
-<p><em>md2slides</em> is a command line program run from a shell like Bash. You can find compiled
-version in the <a href="https://github.com/rsdoiel/md2slides/releases/latest">releases</a>
-in the Github repository in a zip file named <em>md2slides-binary-release.zip</em>. Inside
+<p><em>mkslides</em> is a command line program run from a shell like Bash. You can find compiled
+version in the <a href="https://github.com/rsdoiel/mkslides/releases/latest">releases</a>
+in the Github repository in a zip file named <em>mkslides-binary-release.zip</em>. Inside
 the zip file look for the directory that matches your computer and copy that someplace
 defined in your path (e.g. $HOME/bin).</p>
 
@@ -23,34 +23,34 @@ defined in your path (e.g. $HOME/bin).</p>
 <h2>Mac OS X</h2>
 
 <ol>
-<li>Go to <a href="https://github.com/rsdoiel/md2slides/releases/latest">github.com/rsdoiel/md2slides/releases/latest</a></li>
-<li>Click on the green &ldquo;md2slides-binary-release.zip&rdquo; link and download</li>
-<li>Open a finder window and find the downloaded file and unzip it (e.g. md2slides-binary-release.zip)</li>
-<li>Look in the unziped folder and find dist/macosx-amd64/md2slides</li>
-<li>Drag (or copy) the <em>md2slides</em> to a &ldquo;bin&rdquo; directory in your path</li>
-<li>Open and &ldquo;Terminal&rdquo; and run <code>md2slides -h</code></li>
+<li>Go to <a href="https://github.com/rsdoiel/mkslides/releases/latest">github.com/rsdoiel/mkslides/releases/latest</a></li>
+<li>Click on the green &ldquo;mkslides-binary-release.zip&rdquo; link and download</li>
+<li>Open a finder window and find the downloaded file and unzip it (e.g. mkslides-binary-release.zip)</li>
+<li>Look in the unziped folder and find dist/macosx-amd64/mkslides</li>
+<li>Drag (or copy) the <em>mkslides</em> to a &ldquo;bin&rdquo; directory in your path</li>
+<li>Open and &ldquo;Terminal&rdquo; and run <code>mkslides -h</code></li>
 </ol>
 
 <h2>Windows</h2>
 
 <ol>
-<li>Go to <a href="https://github.com/rsdoiel/md2slides/releases/latest">github.com/rsdoiel/md2slides/releases/latest</a></li>
-<li>Click on the green &ldquo;md2slides-binary-release.zip&rdquo; link and download</li>
-<li>Open the file manager find the downloaded file and unzip it (e.g. md2slides-binary-release.zip)</li>
-<li>Look in the unziped folder and find dist/windows-amd64/md2slides.exe</li>
-<li>Drag (or copy) the <em>md2slides.exe</em> to a &ldquo;bin&rdquo; directory in your path</li>
-<li>Open Bash and and run <code>md2slides -h</code></li>
+<li>Go to <a href="https://github.com/rsdoiel/mkslides/releases/latest">github.com/rsdoiel/mkslides/releases/latest</a></li>
+<li>Click on the green &ldquo;mkslides-binary-release.zip&rdquo; link and download</li>
+<li>Open the file manager find the downloaded file and unzip it (e.g. mkslides-binary-release.zip)</li>
+<li>Look in the unziped folder and find dist/windows-amd64/mkslides.exe</li>
+<li>Drag (or copy) the <em>mkslides.exe</em> to a &ldquo;bin&rdquo; directory in your path</li>
+<li>Open Bash and and run <code>mkslides -h</code></li>
 </ol>
 
 <h2>Linux</h2>
 
 <ol>
-<li>Go to <a href="https://github.com/rsdoiel/md2slides/releases/latest">github.com/rsdoiel/md2slides/releases/latest</a></li>
-<li>Click on the green &ldquo;md2slides-binary-release.zip&rdquo; link and download</li>
-<li>find the downloaded zip file and unzip it (e.g. unzip ~/Downloads/md2slides-binary-release.zip)</li>
-<li>In the unziped directory and find for dist/linux-amd64/md2slides</li>
-<li>copy the <em>md2slides</em> to a &ldquo;bin&rdquo; directory (e.g. cp ~/Downloads/md2slides-binary-release/dist/linux-amd64/md2slides ~/bin/)</li>
-<li>From the shell prompt run <code>md2slides -h</code></li>
+<li>Go to <a href="https://github.com/rsdoiel/mkslides/releases/latest">github.com/rsdoiel/mkslides/releases/latest</a></li>
+<li>Click on the green &ldquo;mkslides-binary-release.zip&rdquo; link and download</li>
+<li>find the downloaded zip file and unzip it (e.g. unzip ~/Downloads/mkslides-binary-release.zip)</li>
+<li>In the unziped directory and find for dist/linux-amd64/mkslides</li>
+<li>copy the <em>mkslides</em> to a &ldquo;bin&rdquo; directory (e.g. cp ~/Downloads/mkslides-binary-release/dist/linux-amd64/mkslides ~/bin/)</li>
+<li>From the shell prompt run <code>mkslides -h</code></li>
 </ol>
 
 <h2>Raspberry Pi</h2>
@@ -58,25 +58,25 @@ defined in your path (e.g. $HOME/bin).</p>
 <p>If you are using a Raspberry Pi 2 or later use the ARM7 binary, ARM6 is only for the first generaiton Raspberry Pi.</p>
 
 <ol>
-<li>Go to <a href="https://github.com/rsdoiel/md2slides/releases/latest">github.com/rsdoiel/md2slides/releases/latest</a></li>
-<li>Click on the green &ldquo;md2slides-binary-release.zip&rdquo; link and download</li>
-<li>find the downloaded zip file and unzip it (e.g. unzip ~/Downloads/md2slides-binary-release.zip)</li>
-<li>In the unziped directory and find for dist/raspberrypi-arm7/md2slides</li>
-<li>copy the <em>md2slides</em> to a &ldquo;bin&rdquo; directory (e.g. cp ~/Downloads/md2slides-binary-release/dist/raspberrypi-arm7/md2slides ~/bin/)
+<li>Go to <a href="https://github.com/rsdoiel/mkslides/releases/latest">github.com/rsdoiel/mkslides/releases/latest</a></li>
+<li>Click on the green &ldquo;mkslides-binary-release.zip&rdquo; link and download</li>
+<li>find the downloaded zip file and unzip it (e.g. unzip ~/Downloads/mkslides-binary-release.zip)</li>
+<li>In the unziped directory and find for dist/raspberrypi-arm7/mkslides</li>
+<li>copy the <em>mkslides</em> to a &ldquo;bin&rdquo; directory (e.g. cp ~/Downloads/mkslides-binary-release/dist/raspberrypi-arm7/mkslides ~/bin/)
 
 <ul>
 <li>if you are using an original Raspberry Pi you should copy the ARM6 version instead</li>
 </ul></li>
-<li>From the shell prompt run <code>md2slides -h</code></li>
+<li>From the shell prompt run <code>mkslides -h</code></li>
 </ol>
 </section>
     <nav><ul>
 <li><a href="/">home</a></li>
-<li><a href="./">md2slides</a></li>
+<li><a href="./">mkslides</a></li>
 <li><a href="toc-presentation.html">Docs</a></li>
 <li><a href="license.html">LICENSE</a></li>
 <li><a href="install.html">Install</a></li>
-<li><a href="https://github.com/rsdoiel/md2slides">Github</a></li>
+<li><a href="https://github.com/rsdoiel/mkslides">Github</a></li>
 </ul>
 </nav>
     <footer>

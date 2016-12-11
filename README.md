@@ -1,5 +1,5 @@
 
-# md2slides
+# mkslides
 
 Converts a Markdown file into a sequence of HTML5 slides.
 
@@ -10,12 +10,12 @@ Converts a Markdown file into a sequence of HTML5 slides.
 
 ## Releases and cross compilation
 
-The script [mk-release.sh](./mk-release.sh) cross compiles *md2slides* for Windows, Max OS X, Linux (amd64) and Raspberry Pi (Raspbian/ARM6 and ARM7).
+The script [mk-release.sh](./mk-release.sh) cross compiles *mkslides* for Windows, Max OS X, Linux (amd64) and Raspberry Pi (Raspbian/ARM6 and ARM7).
 It places all the resulting executable programs in the *dist* folders.
 
 ## windows issues
 
-*md2slides* has had very limited Windows testing.  *md2slides.exe* 
+*mkslides* has had very limited Windows testing.  *mkslides.exe* 
 presumes the Unix style new line only and not the old DOS/Windows CR/LF type endings.
 
 

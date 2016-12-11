@@ -26,14 +26,14 @@ function MakePage () {
 
     echo "Rendering $html"
     $APP \
-	"title=text:md2slides: A Markdown file to presentation slide converter" \
+	"title=text:mkslides: A Markdown file to presentation slide converter" \
         "nav=$nav" \
         "content=$content" \
         page.tmpl > $html
 }
 
 echo "Checking necessary software is installed"
-softwareCheck mkpage md2slides
+softwareCheck mkpage mkslides
 echo "Generating website index.html"
 MakePage nav.md README.md index.html
 echo "Generating install.html"
@@ -42,8 +42,8 @@ echo "Generating license.html"
 MakePage nav.md "markdown:$(cat LICENSE)" license.html
 
 echo "Generating docs presentation"
-if [ -f bin/md2slides ]; then
-    ./bin/md2slides presentation.md
+if [ -f bin/mkslides ]; then
+    ./bin/mkslides presentation.md
 else
-    md2slides presentation.md
+    mkslides presentation.md
 fi

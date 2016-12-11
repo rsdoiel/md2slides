@@ -1,5 +1,5 @@
 
-# What is md2slides?
+# What is mkslides?
 
 + A simple Markdown to HTML slide processor
 + Comes with a simple built-in template 
@@ -20,13 +20,13 @@
 
 # This presentation
 
-This presentation is an example of using md2slides
+This presentation is an example of using mkslides
 
 --
 
 # Customization
 
-*md2slides* can be customized by supply a path to 
+*mkslides* can be customized by supply a path to 
 a CSS file, to a JavaScript file as well as providing a
 template.
 
@@ -153,7 +153,7 @@ Here is an example template
 # The basics
 
 ```
-    md2slides presentations.md
+    mkslides presentations.md
 ```
 
 This generates your presentation HTML using all the defaults
@@ -163,7 +163,7 @@ This generates your presentation HTML using all the defaults
 # USAGE
 
 ```
-    md2slides [OPTIONS] [FILENAME]
+    mkslides [OPTIONS] [FILENAME]
 ```
 
 ## OPTIONS:
